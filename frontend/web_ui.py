@@ -10,15 +10,22 @@ import csv
 from flask_basicauth import BasicAuth
 import configparser
 import subprocess
-import urllib2
-import time
-import thread
+#import urllib2 # Migrate to urllib.request, urllib.error
+# Used to check for internet connectionimport time 
+import _thread as thread # Depricated, use threading instead
 import re
 import smtplib
 from email.mime.text import MIMEText
 import socket
 import struct
 
+### Plugins ###
+import os
+import importlib
+import sys
+sys.path.append('.')
+import plugins
+pluginList = plugins.loadPlugins()
 
 
 # read settings
@@ -121,8 +128,8 @@ def dashboard_page():
         # field name
         f_name = col_names[i][1]
         # fill in values
-        if f_name in icon_dict.keys():
-            values_to_display.append({'name':f_name, 'value':latest_datapoint[i], 'icon':icon_dict[f_name]})
+#        if f_name in icon_dict.keys():
+#            values_to_display.append({'name':f_name, 'value':latest_datapoint[i], 'icon':icon_dict[f_name]})
 
     return render_template('dashboard.html', values_to_display=values_to_display)
 
@@ -149,7 +156,7 @@ def plotting_page():
         # field name
         f_name = col_names[i][1]
         # fill in location
-        if f_name in location_vars.keys():
+        if f_name in list(location_vars.keys()):
             location_vars[f_name] = latest_datapoint[i]
 
 
@@ -202,6 +209,14 @@ def get_current_and_available_networks():
             essid = availableNetworksLine.replace('SSID:','').strip()
             wifiNetworkList.append(essid)
     return connectedNetworkNameStr, wifiNetworkList
+
+@app.route('/plugins', methods=['GET', 'POST'])
+@basic_auth.required
+def plugins():
+    plugins = []
+    for plugin in pluginList:
+        plugins.append(plugin.details())
+    return render_template('plugins.html', plugins=plugins)
 
 @app.route('/connect_to_wifi', methods=['GET', 'POST'])
 @basic_auth.required
@@ -260,7 +275,7 @@ def send_status_mail():
     content += "If you have any questions or could use some help, do not hesitate to contact us at: contact@cosmicpi.org\n\n"
     content += "All the best,\nYour CosmicPi-Team\n\n\n"
     content += "Some information about your CosmicPi:\n"
-    for key in listtatata.keys():
+    for key in list(listtatata.keys()):
         content += "{}: {}\n".format(key, listtatata[key])
 
     msg = MIMEText(content)
@@ -367,11 +382,12 @@ def connect_to_wifi(name, pw):
         return
 
 def internet_on():
-    try:
-        urllib2.urlopen('http://heise.de', timeout=2)
-        return True
-    except urllib2.URLError as err:
-        return False
+    return True
+    # try:
+    #     urllib2.urlopen('http://heise.de', timeout=2)
+    #     return True
+    # except urllib2.URLError as err:
+    #     return False
 
 @app.route('/CosmicPi_data.csv', methods=['GET'])
 @basic_auth.required
@@ -439,7 +455,7 @@ def build_plot():
     else:
         event_time_list = [data[i][0] + data[i][1] for i in range(len(data))]
         #event_time_list = [data[i][0] for i in range(len(data))]
-        bin_edges = range(int(event_time_list[len(event_time_list) - 1]), int(event_time_list[0]), bin_size_seconds)
+        bin_edges = list(range(int(event_time_list[len(event_time_list) - 1]), int(event_time_list[0]), bin_size_seconds))
         x_axis_limits = (start_time, int(event_time_list[0])+1)
         # convert our unix timestamps to Matplotlib  format
         event_time_list = mdates.epoch2num(event_time_list)
@@ -482,5 +498,5 @@ def build_plot():
 if __name__ == '__main__':
     # do necessary inits
     initDB()
-    GoogleMaps(app, key="AIzaSyD_RgwMc6X6LpkAmskk4fWmafNFXtlB7_s")
+    #GoogleMaps(app, key="AIzaSyD_RgwMc6X6LpkAmskk4fWmafNFXtlB7_s")
     app.run()

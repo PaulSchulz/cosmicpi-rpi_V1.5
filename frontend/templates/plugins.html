@@ -1,0 +1,40 @@
+{% extends "cosmic_base.html" %}
+{% block title %}Plugins{% endblock %}
+{% block head_additions %}
+{% endblock %}
+{% block content %}
+<h1>Plugins</h1>
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+	<th></th>
+	<th>Name</th>
+	<th>Section</th>
+	<th>Description</th>
+	<th>Version</th>
+	<th></th>
+      </tr>
+    </thead>
+    {% for plugin in plugins %}
+    <tbody>
+      <tr>
+	<td>
+	  {% if plugin.enabled %}
+	  Enabled
+	  {% else %}
+	  Disabled
+	  {% endif %}
+	</td>
+	<td>{{plugin.name}}</td>
+	<td>{{plugin.section}}</td>
+	<td>{{plugin.description}}</td>
+	<td>{{plugin.version}}</td>
+	<td><a href="plugins">Configure</a></tr>
+	</td>
+      </tr>
+    </tbody>
+    {% endfor %}
+  </table>
+
+{% endblock %}
