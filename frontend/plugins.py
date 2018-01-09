@@ -31,5 +31,5 @@ if __name__ == '__main__':
     # Load Plugins
     pluginList = loadPlugins()
 
-    for plugin in pluginList: 
+    for plugin in pluginList:
         printPlugin(plugin)
