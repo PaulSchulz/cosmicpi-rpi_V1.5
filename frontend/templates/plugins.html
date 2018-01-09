@@ -21,14 +21,15 @@
       <tr>
 	<td>
 	  {% if plugin.enabled %}
-	  Enabled
+	  <a href="plugins/{{plugin.id}}/disable">Enabled</a>
 	  {% else %}
-	  Disabled
+	  <a href="plugins/{{plugin.id}}/enable">Disabled</a>
 	  {% endif %}
 	</td>
-	<td>{{plugin.name}}</td>
+	<td>{{plugin.name}}<br/>
+	  ({{plugin.id}})</td>
 	<td>{{plugin.section}}</td>
-	<td>{{plugin.description}}</td>
+	<td>{{plugin.descyription}}</td>
 	<td>{{plugin.version}}</td>
 	<td><a href="plugins">Configure</a></tr>
 	</td>
