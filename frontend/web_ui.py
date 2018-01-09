@@ -207,19 +207,23 @@ def get_current_and_available_networks():
 @basic_auth.required
 def plugins():
     plugins = []
-    for plugin in pluginMap.values():
+    for pluginName in sorted(pluginMap):
+        plugin=pluginMap[pluginName]
         pluginDetails = plugin.details()
         pluginDetails['id'] = plugin.id
         pluginDetails['enabled'] = plugin.enabled
         plugins.append(pluginDetails)
     return render_template('plugins.html', plugins=plugins)
 
-@app.route('/plugins/<plugin_name>/enable', methods=['GET', 'POST'])
+@app.route('/plugins/<plugin_name>/<action>', methods=['GET', 'POST'])
 @basic_auth.required
-def plugin_enable(plugin_name):
-    pluginMap[plugin_name].enabled = True
+def plugin_enable(plugin_name,action):
+    if action == 'enable':
+        pluginMap[plugin_name].enabled = True
+    elif action == 'disable':
+        pluginMap[plugin_name].enabled = False
     return redirect("/plugins")
-        
+
 @app.route('/connect_to_wifi', methods=['GET', 'POST'])
 @basic_auth.required
 def wifi_connector():
