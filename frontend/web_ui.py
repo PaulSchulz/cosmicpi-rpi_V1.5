@@ -24,13 +24,9 @@ import importlib
 import sys
 sys.path.append('.')
 import plugins
-<<<<<<< HEAD
+
 #pluginList = plugins.loadPlugins()
 pluginMap = plugins.loadPlugins()
-=======
-pluginList = plugins.loadPlugins()
->>>>>>> Add plugins and infrustructure
-
 
 # read settings
 CONFIG_FILE = "../config/CosmicPi.config"
@@ -211,13 +207,15 @@ def get_current_and_available_networks():
 @basic_auth.required
 def plugins():
     plugins = []
-<<<<<<< HEAD
+
     for pluginName in sorted(pluginMap):
         plugin=pluginMap[pluginName]
+
         pluginDetails = plugin.details()
         pluginDetails['id'] = plugin.id
         pluginDetails['enabled'] = plugin.enabled
         plugins.append(pluginDetails)
+
     return render_template('plugins.html', plugins=plugins)
 
 @app.route('/plugins/<plugin_name>/<action>', methods=['GET', 'POST'])
@@ -229,12 +227,6 @@ def plugin_enable(plugin_name,action):
         pluginMap[plugin_name].enabled = False
     return redirect("/plugins")
 
-=======
-    for plugin in pluginList:
-        plugins.append(plugin.details())
-    return render_template('plugins.html', plugins=plugins)
-
->>>>>>> Add plugins and infrustructure
 @app.route('/connect_to_wifi', methods=['GET', 'POST'])
 @basic_auth.required
 def wifi_connector():
@@ -515,8 +507,4 @@ def build_plot():
 if __name__ == '__main__':
     # do necessary inits
     initDB()
-<<<<<<< HEAD
-=======
-    #GoogleMaps(app, key="AIzaSyD_RgwMc6X6LpkAmskk4fWmafNFXtlB7_s")
->>>>>>> Add plugins and infrustructure
     app.run()

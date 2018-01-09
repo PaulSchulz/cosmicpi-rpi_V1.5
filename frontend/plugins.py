@@ -34,7 +34,6 @@ def printPlugin(plugin):
 if __name__ == '__main__':
     # Load Plugins
     pluginMap = loadPlugins()
-
     for plugin in pluginMap.values():
     pluginList = loadPlugins()
 
