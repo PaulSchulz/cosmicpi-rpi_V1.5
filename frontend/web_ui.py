@@ -25,7 +25,8 @@ import importlib
 import sys
 sys.path.append('.')
 import plugins
-pluginList = plugins.loadPlugins()
+#pluginList = plugins.loadPlugins()
+pluginMap = plugins.loadPlugins()
 
 
 # read settings
@@ -214,10 +215,19 @@ def get_current_and_available_networks():
 @basic_auth.required
 def plugins():
     plugins = []
-    for plugin in pluginList:
-        plugins.append(plugin.details())
+    for plugin in pluginMap.values():
+        pluginDetails = plugin.details()
+        pluginDetails['id'] = plugin.id
+        pluginDetails['enabled'] = plugin.enabled
+        plugins.append(pluginDetails)
     return render_template('plugins.html', plugins=plugins)
 
+@app.route('/plugins/<plugin_name>/enable', methods=['GET', 'POST'])
+@basic_auth.required
+def plugin_enable(plugin_name):
+    pluginMap[plugin_name].enabled = True
+    return redirect("/plugins")
+        
 @app.route('/connect_to_wifi', methods=['GET', 'POST'])
 @basic_auth.required
 def wifi_connector():
@@ -426,10 +436,10 @@ def about_page():
 @app.route('/histogram.png')
 def build_plot():
     # get user set parameters
-    start_time = request.args.get('start_time', type=int)
-    end_time = request.args.get('end_time', type=int)
+    start_time       = request.args.get('start_time',       type=int)
+    end_time         = request.args.get('end_time',         type=int)
     bin_size_seconds = request.args.get('bin_size_seconds', type=int)
-    plot_title = ''
+    plot_title       = ''
 
     # get some data
     data = []

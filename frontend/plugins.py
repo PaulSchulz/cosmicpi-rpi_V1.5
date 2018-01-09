@@ -13,15 +13,19 @@ def getPluginNames(pluginDir):
     return os.listdir(pluginDir)
 
 def loadPlugins():
-    plugins = []
+    plugins = {}
     for pluginName in getPluginNames(pluginDir):
         sys.path.append(pluginDir+"/"+pluginName)
-        plugins.append(dynamic_import(pluginName))
+        plugin          = dynamic_import(pluginName)
+        plugin.id       = pluginName
+        plugin.enabled  = False
+        plugins[pluginName] = plugin
     return plugins
 
 ### Testing ###
 def printPlugin(plugin):
-    print("{:34}".format(plugin.details()['name']) +
+    print("{:30}".format(plugin.id) +
+          "{:34}".format(plugin.details()['name']) +
           "{:14}".format(plugin.details()["section"]) +
           "{:50}".format(plugin.details()["description"]) +
           "{:<12}".format(plugin.details()["version"])
@@ -29,7 +33,7 @@ def printPlugin(plugin):
 
 if __name__ == '__main__':
     # Load Plugins
-    pluginList = loadPlugins()
+    pluginMap = loadPlugins()
 
-    for plugin in pluginList:
+    for plugin in pluginMap.values():
         printPlugin(plugin)
