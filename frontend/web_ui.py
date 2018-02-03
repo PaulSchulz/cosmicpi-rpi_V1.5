@@ -507,4 +507,4 @@ def build_plot():
 if __name__ == '__main__':
     # do necessary inits
     initDB()
-    app.run()
+    app.run(host='0.0.0.0')
