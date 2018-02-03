@@ -513,4 +513,4 @@ if __name__ == '__main__':
     # do necessary inits
     initDB()
     #GoogleMaps(app, key="AIzaSyD_RgwMc6X6LpkAmskk4fWmafNFXtlB7_s")
-    app.run()
+    app.run(host='0.0.0.0')
