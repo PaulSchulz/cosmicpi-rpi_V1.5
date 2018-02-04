@@ -24,6 +24,7 @@ import importlib
 import sys
 sys.path.append('.')
 import plugins
+pluginMap = plugins.loadPlugins()
 
 #pluginList = plugins.loadPlugins()
 pluginMap = plugins.loadPlugins()
@@ -207,7 +208,6 @@ def get_current_and_available_networks():
 @basic_auth.required
 def plugins():
     plugins = []
-
     for pluginName in sorted(pluginMap):
         plugin=pluginMap[pluginName]
 
