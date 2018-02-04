@@ -14,7 +14,7 @@
 	<link href="{{ url_for('static',filename='css/cosmicpi.css') }}" rel="stylesheet">
 	<link href="{{ url_for('static',filename='css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
 
-    <script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='js/jquery.min.js') }}"></script> 
 
     {% block head_additions %}{% endblock %}
 </head>
@@ -28,49 +28,32 @@
 
             <hr class="hideable" />
 
+	    {% if items is not defined %}
+	      {% set items = [{'id': 'dashboard', 'icon': 'wechat',      'label': 'Dashboard'},
+	                    {'id': 'plotting',  'icon': 'bar-chart',   'label': 'Custom functionality'},
+	                    {'id': 'settings',  'icon': 'gears',       'label': 'Settings'},
+	                    {'id': 'about',     'icon': 'info-circle', 'label': 'About'},
+	                    ]
+	      %}
+	    {% endif %} 
             <ul>
                 <li>
                     <a href="https://cosmicpi.github.io/" target="_blank">
                         <i class="fa fa-wechat"></i>
                         <span class="hideable">Website <i class="fa fa-external-link"></i></span>
                     </a>
-                    <hr />
+                    <hr/>
                 </li>
 
+		{% for item in items %}
                 <li>
-                    <a href="/dashboard">
-                        <i class="fa fa-dashboard"></i>
-                        <span class="hideable">Dashboard</span>
+                    <a href="/{{item.id}}">
+                        <i class="fa fa-{{item.icon}}"></i>
+                        <span class="hideable">{{item.label}}</span>
                     </a>
                 </li>
-
-                <li>
-                    <a href="/plotting">
-                        <i class="fa fa-bar-chart"></i>
-                        <span class="hideable">Custom functionality</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="/settings">
-                        <i class="fa fa-gears"></i>
-                        <span class="hideable">Settings</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="/plugins">
-                        <i class="fa fa-gears"></i>
-                        <span class="hideable">Plugins</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="/about">
-                        <i class="fa fa-info-circle"></i>
-                        <span class="hideable">About</span>
-                    </a>
-                </li>
+		{% endfor %}
+		
             </ul>
 
             <hr class="hideable" />

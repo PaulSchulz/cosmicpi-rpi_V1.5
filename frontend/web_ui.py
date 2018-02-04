@@ -63,6 +63,8 @@ def initDB():
                   Latitude REAL, DetectorName TEXT, DetectorVersion TEXT);''')
         conn.commit()
 
+items = []
+
 @app.route("/base/")
 def base():
     return render_template(
@@ -103,6 +105,7 @@ icon_dict = {
             'DetectorVersion': "fa fa-info-circle fa-5x",
 }
 
+items.append({'id': 'dashboard', 'icon': 'wechat', 'label': 'Dashboard'})
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/dashboard/', methods=['GET', 'POST'])
 def dashboard_page():
@@ -129,9 +132,10 @@ def dashboard_page():
 #        if f_name in icon_dict.keys():
 #            values_to_display.append({'name':f_name, 'value':latest_datapoint[i], 'icon':icon_dict[f_name]})
 
-    return render_template('dashboard.html', values_to_display=values_to_display)
+    return render_template('dashboard.html', items=items, values_to_display=values_to_display)
 
 
+items.append({'id': 'plotting', 'icon': 'bar-chart', 'label': 'Custom functionality'})
 @app.route('/plotting/', methods=['GET', 'POST'])
 def plotting_page():
     location_vars = {'Latitude': 0, 'Longitude': 0}
@@ -157,15 +161,14 @@ def plotting_page():
         if f_name in list(location_vars.keys()):
             location_vars[f_name] = latest_datapoint[i]
 
+    return render_template('plotting.html', items=items, location_vars=location_vars)
 
-
-    return render_template('plotting.html', location_vars=location_vars)
-
+items.append({'id': 'settings', 'icon': 'gears', 'label': 'Settings'})
 @app.route('/settings/', methods=['GET', 'POST'])
 @basic_auth.required
 def settings_page():
     current_WiFi, avail_WiFi = get_current_and_available_networks()
-    return render_template('settings.html', available_wifis=avail_WiFi, current_wifi=current_WiFi)
+    return render_template('settings.html', items=items, available_wifis=avail_WiFi, current_wifi=current_WiFi)
 
 def get_current_and_available_networks():
     wifiNetworkList = ''
@@ -204,6 +207,7 @@ def get_current_and_available_networks():
             wifiNetworkList.append(essid)
     return connectedNetworkNameStr, wifiNetworkList
 
+items.append({'id': 'plugins', 'icon': 'gears', 'label': 'Plugins'})
 @app.route('/plugins', methods=['GET', 'POST'])
 @basic_auth.required
 def plugins():
@@ -215,8 +219,18 @@ def plugins():
         pluginDetails['id'] = plugin.id
         pluginDetails['enabled'] = plugin.enabled
         plugins.append(pluginDetails)
+        
+    return render_template('plugins.html', items=items, plugins=plugins)
 
-    return render_template('plugins.html', plugins=plugins)
+@app.route('/plugins/<plugin_name>/details', methods=['GET', 'POST'])
+@basic_auth.required
+def plugin_details(plugin_name):
+    plugin=pluginMap[plugin_name]
+    pluginDetails = plugin.details()
+    pluginDetails['id'] = plugin.id
+    pluginDetails['enabled'] = plugin.enabled
+        
+    return render_template('plugin_details.html', items=items, details=pluginDetails)
 
 @app.route('/plugins/<plugin_name>/<action>', methods=['GET', 'POST'])
 @basic_auth.required
@@ -426,10 +440,10 @@ def csv_export():
     response.headers['Content-Type'] = 'text/csv'
     return response
 
-
+items.append({'id': 'about',     'icon': 'info-circle', 'label': 'About'})
 @app.route('/about/', methods=['GET', 'POST'])
 def about_page():
-    return render_template('about.html')
+    return render_template('about.html', items=items)
 
 
 @app.route('/histogram.png')
