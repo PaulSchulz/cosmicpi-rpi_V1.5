@@ -1,3 +1,5 @@
+import configparser
+
 import time
 import json
 
@@ -10,6 +12,18 @@ def details():
             'version': 0.1,
             'description': "Find location via local GPS service.",
     }
+
+section = 'location-gps'
+settings = []
+
+def read_config(file):
+    config = configparser.ConfigParser()
+    config.read(file)
+    data = {}
+    
+    #    for setting in settings:
+    #        data[setting] = config.get(section,setting)
+    return data
 
 def configuration():
     return {'port': ''}

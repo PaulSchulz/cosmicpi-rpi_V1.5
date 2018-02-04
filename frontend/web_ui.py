@@ -26,9 +26,6 @@ sys.path.append('.')
 import plugins
 pluginMap = plugins.loadPlugins()
 
-#pluginList = plugins.loadPlugins()
-pluginMap = plugins.loadPlugins()
-
 # read settings
 CONFIG_FILE = "../config/CosmicPi.config"
 # read configuration
@@ -229,8 +226,11 @@ def plugin_details(plugin_name):
     pluginDetails = plugin.details()
     pluginDetails['id'] = plugin.id
     pluginDetails['enabled'] = plugin.enabled
-        
-    return render_template('plugin_details.html', items=items, details=pluginDetails)
+    pluginConfig = plugin.read_config(CONFIG_FILE)
+    return render_template('plugin_details.html',
+                           items=items,
+                           details=pluginDetails,
+                           config=pluginConfig)
 
 @app.route('/plugins/<plugin_name>/<action>', methods=['GET', 'POST'])
 @basic_auth.required

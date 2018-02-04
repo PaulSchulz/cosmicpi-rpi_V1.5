@@ -4,6 +4,8 @@ import importlib
 import sys
 sys.path.append('.')
 
+import configparser
+
 pluginDir = 'plugins'
 
 def dynamic_import(pluginfile):
@@ -21,6 +23,16 @@ def loadPlugins():
         plugin.enabled  = False
         plugins[pluginName] = plugin
     return plugins
+
+### Useful methods
+# TODO Have not been able to get these methods to work without error
+# in main program.
+
+def enablePlugin(plugin):
+    plugin.enabled = True
+
+def disablePlugin(plugin):
+    plugin.enabled = False
 
 ### Testing ###
 def printPlugin(plugin):

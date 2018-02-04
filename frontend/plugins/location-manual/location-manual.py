@@ -1,3 +1,5 @@
+import configparser
+
 import time
 import json
 
@@ -24,6 +26,21 @@ def configuration():
         '_internal_timestamp': time.time()
     }
     return data
+
+section = 'location-manual'
+settings = []
+
+def read_config(file):
+    config = configparser.ConfigParser()
+    config.read(file)
+    data = {}
+    
+    #    for setting in settings:
+    #        data[setting] = config.get(section,setting)
+    data = configuration()
+
+    return data
+
 
 def run():
     data = configuration()

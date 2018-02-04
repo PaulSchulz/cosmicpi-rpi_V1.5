@@ -1,0 +1,45 @@
+{% extends "cosmic_base.html" %}
+{% block title %}Plugin Details{% endblock %}
+{% block head_additions %}
+{% endblock %}
+{% block content %}
+<a href="/plugins">Back</a>
+<h1>Plugin - {{details['name']}}</h1>
+  <h2>Details</h2>
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+	<th>Item</th>
+	<th>Value</th>
+      </tr>
+    {% for key in details.keys() %}
+    <tbody>
+      <tr>
+	<td>{{key}}</td>
+	<td>{{details[key]}}</td>
+      </tr>
+    </tbody>
+    {% endfor %}
+  </table>
+  
+  <h2>Configuration</h1>
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+	<th>Item</th>
+	<th>Value</th>
+      </tr>
+    {% for key in config.keys() %}
+    <tbody>
+      <tr>
+	<td>{{key}}</td>
+	<td>{{config[key]}}</td>
+      </tr>
+      
+    </tbody>
+    {% endfor %}
+  </table>
+
+{% endblock %}

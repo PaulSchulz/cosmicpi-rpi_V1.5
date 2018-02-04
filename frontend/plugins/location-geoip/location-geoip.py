@@ -1,3 +1,5 @@
+import configparser
+
 import time
 import requests
 import json
@@ -6,11 +8,26 @@ def main():
     print(__name__)
 
 def details():
-    return {'name': "GeoIP Location",
+    return {'name': "GeoIP Location (WIP)",
             'section': 'location',
             'version': 0.1,
             'description': "Find location via FreeGeoIP service.",
     }
+
+section = 'location-geoip'
+settings = ['url']
+
+def read_config(file):
+    config = configparser.ConfigParser()
+    config.read(file)
+    data = {}
+    
+    #    for setting in settings:
+    #        data[setting] = config.get(section,setting)
+
+    # Defaults
+    data['url'] = 'http://freegeoip.net/json'
+    return data
 
 def configuration():
     return {'url': 'http://freegeoip.net/json'}

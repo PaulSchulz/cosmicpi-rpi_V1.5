@@ -1,3 +1,5 @@
+import configparser
+
 def main():
     print(__name__)
 
@@ -10,6 +12,19 @@ def details():
 
 def configuration():
     data = {}
+    return data
+
+section = 'logging-cosmicpi'
+settings = []
+
+def read_config(file):
+    config = configparser.ConfigParser()
+    config.read(file)
+    data = {}
+
+    #    for setting in settings:
+    #        data[setting] = config.get(section,setting)
+    data = configuration()
     return data
 
 def run():
